@@ -12,49 +12,66 @@
   </style>
 </head>
 <body>
-<p class="p1">&lt;script&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ1m_6ohbsJJikxC_lq07-JMJICuKrbfxKYk_rBgrpgv2RCApnf8pCjw_0iugdAU8jC-MpQyJPkvZn3/pub?gid=0&amp;single=true&amp;output=csv";</p>
-<p class="p1"><span class="Apple-converted-space">  </span>const proxy = "https://api.allorigins.win/get?url=";</p>
+<p class="p1">&lt;!DOCTYPE html&gt;</p>
+<p class="p1">&lt;html lang="en"&gt;</p>
+<p class="p1">&lt;head&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;meta charset="UTF-8"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;title&gt;Restaurant Roulette&lt;/title&gt;</p>
+<p class="p1">&lt;/head&gt;</p>
+<p class="p1">&lt;body&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;h1&gt;Restaurant Roulette&lt;/h1&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;div id="roulette"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;p&gt;Spin to Choose!&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;button id="spin"&gt;Spin!&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;div id="result"&gt;&lt;/div&gt;</p>
 <p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>let restaurants = [];</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;script&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ1m_6ohbsJJikxC_lq07-JMJICuKrbfxKYk_rBgrpgv2RCApnf8pCjw_0iugdAU8jC-MpQyJPkvZn3/pub?gid=0&amp;single=true&amp;output=csv";</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const proxy = "https://api.allorigins.win/get?url=";</p>
 <p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>// Fetch data from Google Sheet</p>
-<p class="p1"><span class="Apple-converted-space">  </span>async function fetchData() {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>try {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const response = await fetch(proxy + encodeURIComponent(sheetURL));</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const data = await response.json();</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const rows = data.contents.split("\n").slice(1); // Skip header row</p>
-<p class="p1"><span class="Apple-converted-space">      </span>restaurants = rows</p>
-<p class="p1"><span class="Apple-converted-space">        </span>.map(row =&gt; row.split(","))</p>
-<p class="p1"><span class="Apple-converted-space">        </span>.filter(row =&gt; row.length === 2)</p>
-<p class="p1"><span class="Apple-converted-space">        </span>.map(([name, link]) =&gt; ({ name: name.trim(), link: link.trim() }));</p>
-<p class="p1"><span class="Apple-converted-space">    </span>} catch (error) {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>console.error("Error fetching data:", error);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>let restaurants = [];</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>// Fetch data from Google Sheet</p>
+<p class="p1"><span class="Apple-converted-space">    </span>async function fetchData() {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>try {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const response = await fetch(proxy + encodeURIComponent(sheetURL));</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const data = await response.json();</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const rows = data.contents.split("\n").slice(1); // Skip header row</p>
+<p class="p1"><span class="Apple-converted-space">        </span>restaurants = rows</p>
+<p class="p1"><span class="Apple-converted-space">          </span>.map(row =&gt; row.split(","))</p>
+<p class="p1"><span class="Apple-converted-space">          </span>.filter(row =&gt; row.length === 2)</p>
+<p class="p1"><span class="Apple-converted-space">          </span>.map(([name, link]) =&gt; ({ name: name.trim(), link: link.trim() }));</p>
+<p class="p1"><span class="Apple-converted-space">      </span>} catch (error) {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>console.error("Error fetching data:", error);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>}</p>
 <p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
 <p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>// Spin Roulette</p>
-<p class="p1"><span class="Apple-converted-space">  </span>function spinRoulette() {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>if (restaurants.length === 0) {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>alert("No data available. Please check your Google Sheet.");</p>
-<p class="p1"><span class="Apple-converted-space">      </span>return;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>// Spin Roulette</p>
+<p class="p1"><span class="Apple-converted-space">    </span>function spinRoulette() {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>if (restaurants.length === 0) {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>alert("No data available. Please check your Google Sheet.");</p>
+<p class="p1"><span class="Apple-converted-space">        </span>return;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>}</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const randomIndex = Math.floor(Math.random() * restaurants.length);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const chosen = restaurants[randomIndex];</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const resultDiv = document.getElementById("result");</p>
+<p class="p1"><span class="Apple-converted-space">      </span>resultDiv.innerHTML = `</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;p&gt;You should try:&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;a href="${chosen.link}" target="_blank" style="font-size: 24px; color: #4CAF50; text-decoration: none;"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>${chosen.name}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/a&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>`;</p>
 <p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>const randomIndex = Math.floor(Math.random() * restaurants.length);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>const chosen = restaurants[randomIndex];</p>
-<p class="p1"><span class="Apple-converted-space">    </span>const resultDiv = document.getElementById("result");</p>
-<p class="p1"><span class="Apple-converted-space">    </span>resultDiv.innerHTML = `</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;p&gt;You should try:&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;a href="${chosen.link}" target="_blank" style="font-size: 24px; color: #4CAF50; text-decoration: none;"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>${chosen.name}</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;/a&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>`;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
 <p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>// Initialize</p>
-<p class="p1"><span class="Apple-converted-space">  </span>fetchData();</p>
+<p class="p1"><span class="Apple-converted-space">    </span>// Initialize</p>
+<p class="p1"><span class="Apple-converted-space">    </span>fetchData();</p>
 <p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>// Attach spin function to button</p>
-<p class="p1"><span class="Apple-converted-space">  </span>document.getElementById("spin").addEventListener("click", spinRoulette);</p>
-<p class="p1">&lt;/script&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>// Attach spin function to button</p>
+<p class="p1"><span class="Apple-converted-space">    </span>document.getElementById("spin").addEventListener("click", spinRoulette);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;/script&gt;</p>
+<p class="p1">&lt;/body&gt;</p>
+<p class="p1">&lt;/html&gt;</p>
 </body>
 </html>
