@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Restaurant Roulette</title>
+</head>
+<body>
+  <h1>Restaurant Roulette</h1>
+  <div id="roulette">
+    <p>Spin to Choose!</p>
+  </div>
+  <button id="spin">Spin!</button>
+  <div id="result"></div>
+
+  <script>
+    const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ1m_6ohbsJJikxC_lq07-JMJICuKrbfxKYk_rBgrpgv2RCApnf8pCjw_0iugdAU8jC-MpQyJPkvZn3/pub?gid=0&single=true&output=csv";
+    const proxy = "https://api.allorigins.win/get?url=";
+
+    let restaurants = [];
+
+    // Fetch data from Google Sheet
+    async function fetchData() {
+      try {
+        const response = await fetch(proxy + encodeURIComponent(sheetURL));
+        const data = await response.json();
+        const rows = data.contents.split("\n").slice(1); // Skip header row
+        restaurants = rows
+          .map(row => row.split(","))
+          .filter(row => row.length === 2)
+          .map(([name, link]) => ({ name: name.trim(), link: link.trim() }));
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    }
+
+    // Spin Roulette
+    function spinRoulette() {
+      if (restaurants.length === 0) {
+        alert("No data available. Please check your Google Sheet.");
+        return;
+      }
+      const randomIndex = Math.floor(Math.random() * restaurants.length);
+      const chosen = restaurants[randomIndex];
+      const resultDiv = document.getElementById("result");
+      resultDiv.innerHTML = `
+        <p>You should try:</p>
+        <a href="${chosen.link}" target="_blank" style="font-size: 24px; color: #4CAF50; text-decoration: none;">
+          ${chosen.name}
+        </a>
+      `;
+    }
+
+    // Initialize
+    fetchData();
+
+    // Attach spin function to button
+    document.getElementById("spin").addEventListener("click", spinRoulette);
+  </script>
+</body>
+</html>
